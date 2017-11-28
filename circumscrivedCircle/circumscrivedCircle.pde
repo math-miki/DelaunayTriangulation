@@ -22,24 +22,21 @@ void draw() {
   drawCircumscrivedCircle(pars[0].x,pars[0].y,pars[1].x,pars[1].y,pars[2].x,pars[2].y);
 }
 void drawCircumscrivedCircle(float x1,float y1,float x2,float y2,float x3,float y3) {
-  float cx;
-  float cy;
-  float r;
-  float a = dist(x2,y2,x3,y3);
-  float b = dist(x1,y1,x3,y3);
-  float c = dist(x1,y1,x2,y2);
-  float conC = (a*a + b*b - c*c)/(2.0*a*b);
-  float sinC = sqrt(1.0-conC*conC);
-  float l1 = 1/((y2-y1)/(x2-x1));
-  float v1 = (y2*y2+x2*x2-y1*y1-x1*x1)/2.0;
-  float l2 = 1/((y3-y1)/(x3-x1));
-  float v2 = (y3*y3+x3*x3-y1*y1-x1*x1)/2.0;
-  cx=(v2-v1)/(l2-l1);
-  cy=-1*l1*cx+v1;
-  r = c / sinC;
+  float x12 = x1-x2;
+  float x13 = x1-x3;
+  float y12 = y1-y2;
+  float y13 = y1-y3;
+  float z21 = x2*x2 + y2*y2 - x1*x1 - y1*y1;
+  float z31 = x3*x3 + y3*y3 - x1*x1 - y1*y1;
+  float l = (y12*z31 - y13*z21) / (x13*y12 - x12*y13);
+  float m = (z21 - x12*l)/y12;
+  float n = -1*(x1*x1 + y1*y1 + x1*l + y1*m);
+  float cx = -1*l/2.0;
+  float cy = -1*m/2.0;
+  float r = sqrt((l*l)/4.0 + (m*m)/4.0 - n);
   stroke(55);
   noFill();
-  ellipse(x1+cx,y1+cy,r,r);
+  ellipse(cx,cy,r,r);
   println(cx,cy,r);
 }
 void mousePressed() {
