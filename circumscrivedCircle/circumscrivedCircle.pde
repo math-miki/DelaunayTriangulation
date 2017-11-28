@@ -33,11 +33,10 @@ void drawCircumscrivedCircle(float x1,float y1,float x2,float y2,float x3,float 
   float n = -1*(x1*x1 + y1*y1 + x1*l + y1*m);
   float cx = -1*l/2.0;
   float cy = -1*m/2.0;
-  float r = sqrt((l*l)/4.0 + (m*m)/4.0 - n);
+  float r = 2*sqrt((l*l + m*m)/4.0 - n);
   stroke(55);
   noFill();
   ellipse(cx,cy,r,r);
-  println(cx,cy,r);
 }
 void mousePressed() {
   for(int i=0; i<3; i++) {
