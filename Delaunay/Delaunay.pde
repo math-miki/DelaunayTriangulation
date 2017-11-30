@@ -27,5 +27,5 @@ Circle CircumscrivedCircle(DTriangle t) {
   float cy = -1*m/2.0;
   float r = sqrt((l*l + m*m)/4.0 - n);
 
-  return new Circle(new Point(cx, cy), r)
+  return new Circle(new Point(cx, cy), r);
 }
