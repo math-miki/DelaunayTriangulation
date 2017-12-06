@@ -1,6 +1,39 @@
-class DelaunayTrianglation {
+class DelaunayTriangulation {
+  HashSet triangleSet;
 
-  Circle CircumscrivedCircle(DTriangle t) {
+  public DelaunayTrianglation(ArrayList points) {
+    doTriangulation(points)
+
+  }
+  public void doTriangulation(ArrayList points) {
+    triangleSet = new HashSet();
+
+    Triangle baseTriangle = getBaseTriangle();
+    triangleSet.add(baseTriangle);
+
+    try {
+      /* Do Triangulation */
+      for (Iterator pIter = pointList.iterator(); pIter.hasNext();) {
+        Object element = pIter.next();
+        Point p = element instanceof Point ? (Point)element: new Point((PVector)element);
+
+        HashMap tmpTriangleSet = new HashMap();
+
+        for (Iterator tIter=triangleSet.iterator(); tIter.hasNext();) {
+          Triangle t = (Triangle)tIter.next();
+          Circle c = getCircumscrivedCircle(t);
+
+          if (PVector.dist(c.c, p)) {
+
+          }
+        }
+      }
+    } catch (Exception ex) {
+      return;
+    }
+  }
+
+  Circle getCircumscrivedCircle(DTriangle t) {
     float x1 = t.p1.x;
     float y1 = t.p1.y;
     float x2 = t.p2.x;
