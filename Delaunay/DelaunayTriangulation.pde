@@ -1,14 +1,16 @@
+import java.util.Map;
+import java.util.*;
 class DelaunayTriangulation {
   HashSet triangleSet;
 
-  public DelaunayTrianglation(ArrayList points) {
-    doTriangulation(points)
+  public DelaunayTriangulation(ArrayList points) {
+    doTriangulation(points);
 
   }
-  public void doTriangulation(ArrayList points) {
+  public void doTriangulation(ArrayList pointList) {
     triangleSet = new HashSet();
 
-    Triangle baseTriangle = getBaseTriangle();
+    DTriangle baseTriangle = getBaseTriangle();
     triangleSet.add(baseTriangle);
 
     try {
@@ -23,17 +25,43 @@ class DelaunayTriangulation {
           Triangle t = (Triangle)tIter.next();
           Circle c = getCircumscrivedCircle(t);
 
-          if (PVector.dist(c.c, p)) {
+          if (PVector.dist(c.c, p) <= c.r) {
+            addElementToRedundanciesMap(tmpTriangleSet, new Triangle(p, t.p1, t.p2));
+            addElementToRedundanciesMap(tmpTriangleSet, new Triangle(p, t.p2, t.p3));
+            addElementToRedundanciesMap(tmpTriangleSet, new Triangle(p, t.p1, t.p3));
 
+            tIter.remove();
           }
         }
+      }
+      for(Iterator tmpIter = tmpTriangleSet.entrySet().iterator(); tmpIter.hasNext;) {
+        Map.Entry entry = (Map.Entry)tmpIter.next();
+        Object t = entry.getKey();
+
+        Boolean isUnique = ((Boolean)entry.getValue().booleanValue());
+        if (isUnique) {
+          triangleSet.add(t);
+        }
+      }
+      for(Iterator tIter = triangleSet.iterator(); tIter.hasNext();) {
+        DTriangle t = (DTriangle)tIter.next();
+        if (baseTriangle.hasCommonPoints(t))
+        tIter.remove();
       }
     } catch (Exception ex) {
       return;
     }
   }
 
-  Circle getCircumscrivedCircle(DTriangle t) {
+  private void addElementToRedundanciesMap(HashMap map, Object t) {
+    if (map.containsKey((Triangle)t)) {
+      map.put(t, new Boolean(false));
+    } else {
+      map.put(t, new Boolean(true));
+    }
+  }
+
+  private Circle getCircumscrivedCircle(DTriangle t) {
     float x1 = t.p1.x;
     float y1 = t.p1.y;
     float x2 = t.p2.x;
