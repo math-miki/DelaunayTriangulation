@@ -10,6 +10,11 @@ class Point extends PVector {
     this.y = v.y;
     this.z = v.z;
   }
+  public Point(PVector v) {
+    this.x = v.x;
+    this.y = v.y;
+    this.z = v.z;
+  }
 
   boolean equals(Object o) {
     try {
