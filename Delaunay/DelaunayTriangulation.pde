@@ -48,7 +48,6 @@ class DelaunayTriangulation {
       for(Iterator tIter = triangleSet.iterator(); tIter.hasNext();) {
         DTriangle t = (DTriangle)tIter.next();
         if (baseTriangle.hasCommonPoints(t)) {
-          println("RE");
           tIter.remove();
         }
       }
