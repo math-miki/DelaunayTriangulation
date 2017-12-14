@@ -15,14 +15,26 @@ class DTriangle {
   }
   void draw() {
     stroke(0);
-    fill(255);
+    strokeWeight(0.5);
+    fill(random(255),random(255), random(255));
+    // noFill();
+    noStroke();
     println("t: ", p1,p2,p3);
     triangle(p1.x,p1.y,p2.x,p2.y,p3.x,p3.y);
   }
 
   Boolean hasCommonPoints (DTriangle t) {
-        return (p1.equals(t.p1) || p1.equals(t.p2) || p1.equals(t.p3) ||
-                p2.equals(t.p1) || p2.equals(t.p2) || p2.equals(t.p3) ||
-                p3.equals(t.p1) || p3.equals(t.p2) || p3.equals(t.p3) );
+      return (p1.equals(t.p1) || p1.equals(t.p2) || p1.equals(t.p3) ||
+              p2.equals(t.p1) || p2.equals(t.p2) || p2.equals(t.p3) ||
+              p3.equals(t.p1) || p3.equals(t.p2) || p3.equals(t.p3) );
+  }
+
+  Boolean isSameTriangle (DTriangle t) {
+    return ((p1.equals(t.p1) && p2.equals(t.p2) && p3.equals(t.p3)) ||
+            (p1.equals(t.p1) && p2.equals(t.p3) && p2.equals(t.p2)) ||
+            (p1.equals(t.p2) && p2.equals(t.p3) && p3.equals(t.p1)) ||
+            (p1.equals(t.p2) && p2.equals(t.p1) && p3.equals(t.p3)) ||
+            (p1.equals(t.p3) && p2.equals(t.p1) && p3.equals(t.p2)) ||
+            (p1.equals(t.p2) && p2.equals(t.p2) && p3.equals(t.p1)) );
   }
 }
