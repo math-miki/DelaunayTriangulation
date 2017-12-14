@@ -2,14 +2,16 @@ import java.util.Map;
 import java.util.*;
 class DelaunayTriangulation {
   HashSet triangleSet;
-
-  public DelaunayTriangulation(ArrayList points) {
+  Boolean b1;
+  public DelaunayTriangulation(ArrayList points, Boolean _b1) {
+    b1 = _b1;
     doTriangulation(points);
   }
   public void doTriangulation(ArrayList pointList) {
     triangleSet = new HashSet();
 
-    DTriangle baseTriangle = getBaseTriangle();
+
+    DTriangle baseTriangle = getBaseTriangle(700,700);
     triangleSet.add(baseTriangle);
 
     try {
@@ -20,7 +22,6 @@ class DelaunayTriangulation {
         Object element = pIter.next();
         Point p = element instanceof Point ? (Point)element: new Point((PVector)element);
 
-        // println("u", triangleSet);
         HashMap tmpTriangleSet = new HashMap();
 
         for (Iterator tIter=triangleSet.iterator(); tIter.hasNext();) {
@@ -31,8 +32,10 @@ class DelaunayTriangulation {
             addElementToRedundanciesMap(tmpTriangleSet, new DTriangle(p, t.p1, t.p2));
             addElementToRedundanciesMap(tmpTriangleSet, new DTriangle(p, t.p2, t.p3));
             addElementToRedundanciesMap(tmpTriangleSet, new DTriangle(p, t.p1, t.p3));
+
+            tIter.remove();
           } else {
-            //addElementToRedundanciesMap(tmpTriangleSet, t);
+            addElementToRedundanciesMap(tmpTriangleSet, t);
           }
         }
         triangleSet.clear();
@@ -40,9 +43,9 @@ class DelaunayTriangulation {
           Map.Entry entry = (Map.Entry)tmpIter.next();
           Object t = entry.getKey();
 
-          Boolean isUnique = ((Boolean)entry.getValue()).booleanValue();
+          Boolean isUnique = ((Boolean)entry.getValue());
           if (isUnique) {
-            triangleSet.add(t);
+            triangleSet.add((DTriangle)t);
           }
         }
       }
@@ -50,7 +53,9 @@ class DelaunayTriangulation {
       for(Iterator tIter = triangleSet.iterator(); tIter.hasNext();) {
         DTriangle t = (DTriangle)tIter.next();
         if (baseTriangle.hasCommonPoints(t)) {
-          tIter.remove();
+          if(b1) {
+            tIter.remove();
+          }
         }
       }
 
@@ -60,13 +65,17 @@ class DelaunayTriangulation {
     }
   }
 
-  private void addElementToRedundanciesMap(HashMap map, Object t) {
-    println(map.containsKey((DTriangle)t), (DTriangle)t);
-    if (map.containsKey((DTriangle)t)) {
-      map.put(t, new Boolean(false));
-    } else {
-      map.put(t, new Boolean(true));
+  private void addElementToRedundanciesMap(HashMap map, DTriangle t) {
+    for(Iterator tIt = map.entrySet().iterator(); tIt.hasNext();) {
+      Map.Entry entry = (Map.Entry) tIt.next();
+      DTriangle t_i = (DTriangle)entry.getKey();
+      if (t.isSameTriangle(t_i)) {
+        map.put(t_i, new Boolean(false));
+
+        return;
+      }
     }
+    map.put(t, new Boolean(true));
   }
 
   private Circle getCircumscrivedCircle(DTriangle t) {
@@ -92,13 +101,13 @@ class DelaunayTriangulation {
 
     return new Circle(new Point(cx, cy), r);
   }
-  DTriangle getBaseTriangle() {
+  DTriangle getBaseTriangle(int w, int h) {
     /*
       画面に外接する円に外接する正方形
     */
-    float r = sqrt(width*width/4.0 + height*height/4.0);
+    float r = sqrt(w*w/4.0 + h*h/4.0);
     float l = 2*r*sqrt(3);
-    return new DTriangle(new Point(width/2.0, height/2.0 + r - sqrt(3)*l/2.0),new Point((width-l)/2.0,height/2.0+r),new Point((width+l)/2.0,height/2.0+r));
+    return new DTriangle(new Point(w/2.0, h/2.0 + r - sqrt(3)*l/2.0),new Point((w-l)/2.0,h/2.0+r),new Point((w+l)/2.0,h/2.0+r));
   }
 
   public void dis() {

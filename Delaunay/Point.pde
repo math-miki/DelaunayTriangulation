@@ -19,7 +19,7 @@ class Point extends PVector {
   boolean equals(Object o) {
     try {
       PVector p = (PVector)o;
-      return (x == p.x && y == p.y && z == p.z);
+      return (x == p.x && y == p.y);
     } catch (Exception ex) {
       return false;
     }
