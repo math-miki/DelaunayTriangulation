@@ -31,10 +31,11 @@ class DelaunayTriangulation {
             addElementToRedundanciesMap(tmpTriangleSet, new DTriangle(p, t.p1, t.p2));
             addElementToRedundanciesMap(tmpTriangleSet, new DTriangle(p, t.p2, t.p3));
             addElementToRedundanciesMap(tmpTriangleSet, new DTriangle(p, t.p1, t.p3));
-
-            triangleSet.remove(tIter);
+          } else {
+            //addElementToRedundanciesMap(tmpTriangleSet, t);
           }
         }
+        triangleSet.clear();
         for(Iterator tmpIter = tmpTriangleSet.entrySet().iterator(); tmpIter.hasNext();) {
           Map.Entry entry = (Map.Entry)tmpIter.next();
           Object t = entry.getKey();
@@ -45,12 +46,14 @@ class DelaunayTriangulation {
           }
         }
       }
+
       for(Iterator tIter = triangleSet.iterator(); tIter.hasNext();) {
         DTriangle t = (DTriangle)tIter.next();
         if (baseTriangle.hasCommonPoints(t)) {
           tIter.remove();
         }
       }
+
     } catch (Exception ex) {
       println(ex);
       return;
@@ -58,6 +61,7 @@ class DelaunayTriangulation {
   }
 
   private void addElementToRedundanciesMap(HashMap map, Object t) {
+    println(map.containsKey((DTriangle)t), (DTriangle)t);
     if (map.containsKey((DTriangle)t)) {
       map.put(t, new Boolean(false));
     } else {
@@ -99,11 +103,11 @@ class DelaunayTriangulation {
 
   public void dis() {
     println(triangleSet.size());
-/*
+
     for(Iterator tIter=triangleSet.iterator(); tIter.hasNext();) {
       DTriangle t = (DTriangle)tIter.next();
       t.draw();
     }
+
   }
-  */
 }
