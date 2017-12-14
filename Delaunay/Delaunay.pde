@@ -13,9 +13,12 @@ void setup() {
   }
   println(points);
   delaunay = new DelaunayTriangulation(points);
+  noLoop();
 }
 
 void draw() {
+  println("draw");
   background(255);
   delaunay.dis();
+    println("drawed");
 }
