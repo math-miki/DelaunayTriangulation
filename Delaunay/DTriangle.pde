@@ -13,13 +13,13 @@ class DTriangle {
       return false;
     }
   }
-  void draw() {
+  void draw(color c) {
     stroke(0);
-    strokeWeight(0.5);
-    fill(random(255),random(255), random(255));
+    strokeWeight(1);
+    fill(c);
+    //fill(random(255));
     // noFill();
-    noStroke();
-    println("t: ", p1,p2,p3);
+    stroke(c);
     triangle(p1.x,p1.y,p2.x,p2.y,p3.x,p3.y);
   }
 
@@ -36,5 +36,11 @@ class DTriangle {
             (p1.equals(t.p2) && p2.equals(t.p1) && p3.equals(t.p3)) ||
             (p1.equals(t.p3) && p2.equals(t.p1) && p3.equals(t.p2)) ||
             (p1.equals(t.p2) && p2.equals(t.p2) && p3.equals(t.p1)) );
+  }
+  Point returnGravity() {
+    float x = (p1.x + p2.x + p3.x) / 3.0;
+    float y = (p1.y + p2.y + p3.y) / 3.0;
+
+    return new Point(x,y);
   }
 }
