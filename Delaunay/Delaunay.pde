@@ -1,14 +1,16 @@
-ArrayList points;
+import java.awt.datatransfer.DataFlavor;
 
+ArrayList points;
+PImage img;
+color[] pix;
 DelaunayTriangulation delaunay;
-Boolean b1 = true;
+
 void setup() {
   //size(1500,1200);
-  size(700,700);
+  size(1500,1500);
   points = new ArrayList();
-
-  for(int i=0; i<500; i++) {
-    points.add(new Point(random(700),random(700)));
+  for(int i=0; i<2000; i++) {
+    points.add(new Point(random(width+100),random(height+100)));
   }
 
     points.add(new Point(0,height));
@@ -16,21 +18,38 @@ void setup() {
     points.add(new Point(width,0));
     points.add(new Point(0,0));
   println(points);
-  delaunay = new DelaunayTriangulation(points, b1);
+  delaunay = new DelaunayTriangulation(points);
   noLoop();
+  img = loadImage("k.jpg");
+  pix = img.pixels;
 }
 
 void draw() {
-// translate(400,500);
-  print(b1);
+
+translate(-50,-50);
   println("draw");
   background(255);
-  delaunay.dis();
+  delaunay.dis(pix);
   println("drawed");
 }
 
 void mouseClicked() {
-  b1 = !b1;
-  delaunay = new DelaunayTriangulation(points, b1);
-  draw();
+
+}
+
+void keyPressed() {
+
+  // Pのキーが入力された時に保存
+  if(key == 'p' || key == 'P') {
+    // デスクトップのパスを取得
+    String path  = System.getProperty("user.home") + "/Desktop/screenshot" + "a" + ".jpg";
+
+    // 保存
+    save(path);
+
+    // 番号を加算
+
+    // ログ用途
+    println("screen saved.");
+  }
 }
