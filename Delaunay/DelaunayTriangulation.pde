@@ -2,16 +2,14 @@ import java.util.Map;
 import java.util.*;
 class DelaunayTriangulation {
   HashSet triangleSet;
-  Boolean b1;
-  public DelaunayTriangulation(ArrayList points, Boolean _b1) {
-    b1 = _b1;
+  public DelaunayTriangulation(ArrayList points) {
     doTriangulation(points);
   }
   public void doTriangulation(ArrayList pointList) {
     triangleSet = new HashSet();
 
 
-    DTriangle baseTriangle = getBaseTriangle(700,700);
+    DTriangle baseTriangle = getBaseTriangle(width+100,height+100);
     triangleSet.add(baseTriangle);
 
     try {
@@ -53,9 +51,7 @@ class DelaunayTriangulation {
       for(Iterator tIter = triangleSet.iterator(); tIter.hasNext();) {
         DTriangle t = (DTriangle)tIter.next();
         if (baseTriangle.hasCommonPoints(t)) {
-          if(b1) {
-            tIter.remove();
-          }
+          tIter.remove();
         }
       }
 
@@ -110,12 +106,16 @@ class DelaunayTriangulation {
     return new DTriangle(new Point(w/2.0, h/2.0 + r - sqrt(3)*l/2.0),new Point((w-l)/2.0,h/2.0+r),new Point((w+l)/2.0,h/2.0+r));
   }
 
-  public void dis() {
+  public void dis(color[] pix) {
     println(triangleSet.size());
 
     for(Iterator tIter=triangleSet.iterator(); tIter.hasNext();) {
       DTriangle t = (DTriangle)tIter.next();
-      t.draw();
+      Point p = t.returnGravity();
+      int l = (int)sqrt(pix.length);
+      int x = (int)p.x*l / (width+100);
+      int y = (int)p.y*l / (height+100);
+      t.draw(pix[y*l+x]);
     }
 
   }
