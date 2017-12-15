@@ -20,7 +20,7 @@ void setup() {
   println(points);
   delaunay = new DelaunayTriangulation(points);
   noLoop();
-  img = loadImage("k.jpg");
+  img = loadImage("a.jpg");
   pix = img.pixels;
 }
 
