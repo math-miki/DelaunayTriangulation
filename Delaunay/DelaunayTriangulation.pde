@@ -2,9 +2,14 @@ import java.util.Map;
 import java.util.*;
 class DelaunayTriangulation {
   HashSet triangleSet;
-  public DelaunayTriangulation(ArrayList points) {
+  int w;
+  int h;
+  public DelaunayTriangulation(ArrayList points,int _w,int _h) {
     doTriangulation(points);
+    w = _w;
+    h = _h;
   }
+  
   public void doTriangulation(ArrayList pointList) {
     triangleSet = new HashSet();
 
@@ -99,24 +104,23 @@ class DelaunayTriangulation {
   }
   DTriangle getBaseTriangle(int w, int h) {
     /*
-      画面に外接する円に外接する正方形
+      画面に外接する円に外接する正三角形
     */
     float r = sqrt(w*w/4.0 + h*h/4.0);
     float l = 2*r*sqrt(3);
     return new DTriangle(new Point(w/2.0, h/2.0 + r - sqrt(3)*l/2.0),new Point((w-l)/2.0,h/2.0+r),new Point((w+l)/2.0,h/2.0+r));
   }
 
-  public void dis(color[] pix) {
+  public void dis(color[] pix, int wPix, int hPix) {
     println(triangleSet.size());
 
     for(Iterator tIter=triangleSet.iterator(); tIter.hasNext();) {
       DTriangle t = (DTriangle)tIter.next();
       Point p = t.returnGravity();
       int l = (int)sqrt(pix.length);
-      int x = (int)p.x*l / (width+100);
-      int y = (int)p.y*l / (height+100);
+      int x = (int)(p.x*wPix / (width+100));
+      int y = (int)(p.y*hPix / (height+100));
       t.draw(pix[y*l+x]);
     }
-
   }
 }
