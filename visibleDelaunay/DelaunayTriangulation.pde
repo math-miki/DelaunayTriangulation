@@ -7,6 +7,7 @@ class DelaunayTriangulation {
   Boolean imageSet;
   color[] pix;
   ArrayList DelaunayPoints;
+  DTriangle baseTriangle;
   public DelaunayTriangulation(ArrayList points,int _w,int _h) {
     DelaunayPoints = points;
     w = _w;
@@ -17,14 +18,17 @@ class DelaunayTriangulation {
     pix = pixels;
     imageSet = true;
   }
+  public void addPoint(Point newPoint) {
+    this.DelaunayPoints.add(newPoint);
+  }
   public void doTriangulation() {
     triangleSet = new HashSet();
 
-    DTriangle baseTriangle = getBaseTriangle(width+100,height+100);
+    baseTriangle = getBaseTriangle(width+100,height+100);
     triangleSet.add(baseTriangle);
 
     try {
-      /* Do Triangulation */
+      /* Do Visible Triangulation */
       int i = 1;
       for (Iterator pIter = DelaunayPoints.iterator(); pIter.hasNext();) {
         println(i++);
@@ -57,7 +61,6 @@ class DelaunayTriangulation {
             triangleSet.add((DTriangle)t);
           }
         }
-        dis();
       }
 
       for(Iterator tIter = triangleSet.iterator(); tIter.hasNext();) {
@@ -121,9 +124,11 @@ class DelaunayTriangulation {
 
   private void dis() {
     if(!(imageSet)) {println("====================================\nNone Image\n====================================");return;}
-    println(triangleSet.size());
-
-    for(Iterator tIter=triangleSet.iterator(); tIter.hasNext();) {
+    println("a" + triangleSet.size());
+    delay(1);
+    HashSet disTriangleSet = new HashSet();
+    disTriangleSet = getDisTriangles();
+    for(Iterator tIter=disTriangleSet.iterator(); tIter.hasNext();) {
       DTriangle t = (DTriangle)tIter.next();
       Point p = t.returnGravity();
       if(0 <= p.x && p.x <= width && 0 <= p.y && p.y <= height) {
@@ -131,8 +136,18 @@ class DelaunayTriangulation {
         int y = (int)(p.y*h / (height+100));
         t.draw(pix[abs(y)*w + abs(x)]);
       } else {
-        print("b");
+        //print("b");
       }
     }
+  }
+  private HashSet getDisTriangles() {
+    HashSet hoge = this.triangleSet;
+    for(Iterator tIter = hoge.iterator()  ; tIter.hasNext();) {
+      DTriangle t = (DTriangle)tIter.next();
+      if (baseTriangle.hasCommonPoints(t)) {
+        tIter.remove();
+      }
+    }
+    return hoge;
   }
 }
