@@ -5,6 +5,7 @@ PImage img;
 color[] pix;
 int w;
 int h;
+int N = 400;
 DelaunayTriangulation delaunay;
 int count;
 public void settings() {
@@ -18,7 +19,7 @@ void setup() {
   w = img.width;
   h = img.height;
   count = 0;
-  for(int i=0; i<500; i++) {
+  for(int i=0; i<N; i++) {
     points.add(new Point(random(width+100)/1,random(height+100)/1));
   }
 
@@ -32,13 +33,18 @@ void setup() {
 }
 
 void draw() {
-  translate(-50,-50);
-  Point p = (Point)points.get(count++);
-  delaunay.addPoint(p);
-  delaunay.doTriangulation();
-  println("draw");
-  // delaunay.dis(pix,img.width, img.height);
-  println("drawed");
+  if(count > N) {
+    noLoop();
+    // delaunay.finTriangulation();
+    println("done Triangulation");
+  } else {
+    translate(-50,-50);
+    Point p = (Point)points.get(count);
+    delaunay.addPoint(p);
+    delaunay.doTriangulation();
+    // delaunay.dis(pix,img.width, img.height);
+    count+=1;
+  }
 }
 
 void mouseClicked() {
