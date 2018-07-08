@@ -6,6 +6,7 @@ color[] pix;
 int w;
 int h;
 DelaunayTriangulation delaunay;
+int count;
 public void settings() {
   size(1000,1000);
 }
@@ -16,8 +17,9 @@ void setup() {
   img = loadImage("a.jpg");
   w = img.width;
   h = img.height;
-  for(int i=0; i<1000; i++) {
-    points.add(new Point(random(width+100),random(height+100)));
+  count = 0;
+  for(int i=0; i<500; i++) {
+    points.add(new Point(random(width+100)/1,random(height+100)/1));
   }
 
   points.add(new Point(0,height));
@@ -25,14 +27,14 @@ void setup() {
   points.add(new Point(width,0));
   points.add(new Point(0,0));
   println(points);
-  delaunay = new DelaunayTriangulation(points, img.width, img.height);
-  noLoop();
+  delaunay = new DelaunayTriangulation(new ArrayList(), img.width, img.height);
   delaunay.setImage(img.pixels);
 }
 
 void draw() {
-translate(-50,-50);
-  background(255);
+  translate(-50,-50);
+  Point p = (Point)points.get(count++);
+  delaunay.addPoint(p);
   delaunay.doTriangulation();
   println("draw");
   // delaunay.dis(pix,img.width, img.height);
