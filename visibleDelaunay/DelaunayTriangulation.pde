@@ -30,8 +30,7 @@ class DelaunayTriangulation {
     try {
       /* Do Visible Triangulation */
       int i = 1;
-      for (Iterator pIter = DelaunayPoints.iterator(); pIter.hasNext();) {
-        println(i++);
+      for (Iterator pIter = DelaunayPoints.iterator(); pIter.hasNext();) {//
         Object element = pIter.next();
         Point p = element instanceof Point ? (Point)element: new Point((PVector)element);
 
@@ -61,16 +60,16 @@ class DelaunayTriangulation {
             triangleSet.add((DTriangle)t);
           }
         }
-      }
+      }//
 
-      for(Iterator tIter = triangleSet.iterator(); tIter.hasNext();) {
-        DTriangle t = (DTriangle)tIter.next();
-        if (baseTriangle.hasCommonPoints(t)) {
-          tIter.remove();
-        }
-      }
-      dis();
-      println("done Triangulation");
+      // for(Iterator tIter = triangleSet.iterator(); tIter.hasNext();) {
+      //   DTriangle t = (DTriangle)tIter.next();
+      //   if (baseTriangle.hasCommonPoints(t)) {
+      //     tIter.remove();
+      //   }
+      // }
+      disMid();
+      println("Round: ", DelaunayPoints.size(), "Ts", triangleSet.size());
     } catch (Exception ex) {
       println(ex);
       return;
@@ -124,8 +123,6 @@ class DelaunayTriangulation {
 
   private void dis() {
     if(!(imageSet)) {println("====================================\nNone Image\n====================================");return;}
-    println("a" + triangleSet.size());
-    delay(1);
     HashSet disTriangleSet = new HashSet();
     disTriangleSet = getDisTriangles();
     for(Iterator tIter=disTriangleSet.iterator(); tIter.hasNext();) {
@@ -137,6 +134,26 @@ class DelaunayTriangulation {
         t.draw(pix[abs(y)*w + abs(x)]);
       } else {
         //print("b");
+      }
+    }
+  }
+  private void disMid() {
+    if(!(imageSet)) {println("====================================\nNone Image\n====================================");return;}
+    HashSet disTriangleSet = new HashSet();
+    disTriangleSet = getDisTriangles();
+    for(Iterator tIter=disTriangleSet.iterator(); tIter.hasNext();) {
+      DTriangle t = (DTriangle)tIter.next();
+      if( baseTriangle.hasCommonPoints(t) ) {
+
+      } else {
+        Point p = t.returnGravity();
+        if(0 <= p.x && p.x <= width && 0 <= p.y && p.y <= height) {
+          int x = (int)(p.x*w / (width+100));
+          int y = (int)(p.y*h / (height+100));
+          t.draw(pix[abs(y)*w + abs(x)]);
+        } else {
+          //print("b");
+        }
       }
     }
   }
