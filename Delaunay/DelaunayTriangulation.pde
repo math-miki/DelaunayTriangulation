@@ -9,7 +9,7 @@ class DelaunayTriangulation {
     w = _w;
     h = _h;
   }
-  
+
   public void doTriangulation(ArrayList pointList) {
     triangleSet = new HashSet();
 
@@ -48,18 +48,18 @@ class DelaunayTriangulation {
 
           Boolean isUnique = ((Boolean)entry.getValue());
           if (isUnique) {
-            triangleSet.add((DTriangle)t);
+            // if (!(baseTriangle.hasCommonPoints((DTriangle)t))) {
+              triangleSet.add((DTriangle)t);
+            // }
           }
         }
       }
-
       for(Iterator tIter = triangleSet.iterator(); tIter.hasNext();) {
         DTriangle t = (DTriangle)tIter.next();
         if (baseTriangle.hasCommonPoints(t)) {
           tIter.remove();
         }
       }
-
     } catch (Exception ex) {
       println(ex);
       return;
