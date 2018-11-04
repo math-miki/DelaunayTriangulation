@@ -8,11 +8,15 @@ class DelaunayTriangulation {
   color[] pix;
   ArrayList DelaunayPoints;
   DTriangle baseTriangle;
-  public DelaunayTriangulation(ArrayList points,int _w,int _h) {
+  public DelaunayTriangulation(ArrayList points, int _w, int _h) {
     DelaunayPoints = points;
     w = _w;
     h = _h;
     imageSet = false;
+
+    triangleSet = new HashSet();
+    baseTriangle = getBaseTriangle(width+100, height+100);
+    triangleSet.add(baseTriangle);
   }
   public void setImage(color[] pixels) {
     pix = pixels;
@@ -20,23 +24,21 @@ class DelaunayTriangulation {
   }
   public void addPoint(Point newPoint) {
     this.DelaunayPoints.add(newPoint);
+    doTriangulation(newPoint);
   }
-  public void doTriangulation() {
-    triangleSet = new HashSet();
+  private void doTriangulation(Point newPoint) {
 
-    baseTriangle = getBaseTriangle(width+100,height+100);
-    triangleSet.add(baseTriangle);
-
+    print(" a ", triangleSet.size());
     try {
       /* Do Visible Triangulation */
-      int i = 1;
-      for (Iterator pIter = DelaunayPoints.iterator(); pIter.hasNext();) {//
+
+      for (Iterator pIter = DelaunayPoints.iterator(); pIter.hasNext(); ) {
         Object element = pIter.next();
-        Point p = element instanceof Point ? (Point)element: new Point((PVector)element);
+        Point p = (Point)element;
 
         HashMap tmpTriangleSet = new HashMap();
 
-        for (Iterator tIter=triangleSet.iterator(); tIter.hasNext();) {
+        for (Iterator tIter=triangleSet.iterator(); tIter.hasNext(); ) {
           DTriangle t = (DTriangle)tIter.next();
           Circle c = getCircumscrivedCircle(t);
 
@@ -44,14 +46,15 @@ class DelaunayTriangulation {
             addElementToRedundanciesMap(tmpTriangleSet, new DTriangle(p, t.p1, t.p2));
             addElementToRedundanciesMap(tmpTriangleSet, new DTriangle(p, t.p2, t.p3));
             addElementToRedundanciesMap(tmpTriangleSet, new DTriangle(p, t.p1, t.p3));
-
             tIter.remove();
           } else {
             addElementToRedundanciesMap(tmpTriangleSet, t);
           }
         }
+        print(" b ", tmpTriangleSet.size());
+
         triangleSet.clear();
-        for(Iterator tmpIter = tmpTriangleSet.entrySet().iterator(); tmpIter.hasNext();) {
+        for (Iterator tmpIter = tmpTriangleSet.entrySet().iterator(); tmpIter.hasNext(); ) {
           Map.Entry entry = (Map.Entry)tmpIter.next();
           Object t = entry.getKey();
 
@@ -60,24 +63,25 @@ class DelaunayTriangulation {
             triangleSet.add((DTriangle)t);
           }
         }
-      }//
+      } //
 
-      // for(Iterator tIter = triangleSet.iterator(); tIter.hasNext();) {
-      //   DTriangle t = (DTriangle)tIter.next();
-      //   if (baseTriangle.hasCommonPoints(t)) {
-      //     tIter.remove();
-      //   }
-      // }
+      //for(Iterator tIter = triangleSet.iterator(); tIter.hasNext();) {
+      //  DTriangle t = (DTriangle)tIter.next();
+      //  if (baseTriangle.hasCommonPoints(t)) {
+      //    tIter.remove();
+      //  }
+      //}
       disMid();
       println("Round: ", DelaunayPoints.size(), "Ts", triangleSet.size());
-    } catch (Exception ex) {
+    } 
+    catch (Exception ex) {
       println(ex);
       return;
     }
   }
 
   private void addElementToRedundanciesMap(HashMap map, DTriangle t) {
-    for(Iterator tIt = map.entrySet().iterator(); tIt.hasNext();) {
+    for (Iterator tIt = map.entrySet().iterator(); tIt.hasNext(); ) {
       Map.Entry entry = (Map.Entry) tIt.next();
       DTriangle t_i = (DTriangle)entry.getKey();
       if (t.isSameTriangle(t_i)) {
@@ -115,20 +119,23 @@ class DelaunayTriangulation {
   DTriangle getBaseTriangle(int w, int h) {
     /*
       画面に外接する円に外接する正三角形
-    */
+     */
     float r = sqrt(w*w/4.0 + h*h/4.0);
     float l = 2*r*sqrt(3);
-    return new DTriangle(new Point(w/2.0, h/2.0 + r - sqrt(3)*l/2.0),new Point((w-l)/2.0,h/2.0+r),new Point((w+l)/2.0,h/2.0+r));
+    return new DTriangle(new Point(w/2.0, h/2.0 + r - sqrt(3)*l/2.0), new Point((w-l)/2.0, h/2.0+r), new Point((w+l)/2.0, h/2.0+r));
   }
 
   private void dis() {
-    if(!(imageSet)) {println("====================================\nNone Image\n====================================");return;}
+    if (!(imageSet)) {
+      println("====================================\nNone Image\n====================================");
+      return;
+    }
     HashSet disTriangleSet = new HashSet();
     disTriangleSet = getDisTriangles();
-    for(Iterator tIter=disTriangleSet.iterator(); tIter.hasNext();) {
+    for (Iterator tIter=disTriangleSet.iterator(); tIter.hasNext(); ) {
       DTriangle t = (DTriangle)tIter.next();
       Point p = t.returnGravity();
-      if(0 <= p.x && p.x <= width && 0 <= p.y && p.y <= height) {
+      if (0 <= p.x && p.x <= width && 0 <= p.y && p.y <= height) {
         int x = (int)(p.x*w / (width+100));
         int y = (int)(p.y*h / (height+100));
         t.draw(pix[abs(y)*w + abs(x)]);
@@ -138,16 +145,18 @@ class DelaunayTriangulation {
     }
   }
   private void disMid() {
-    if(!(imageSet)) {println("====================================\nNone Image\n====================================");return;}
+    if (!(imageSet)) {
+      println("====================================\nNone Image\n====================================");
+      return;
+    }
     HashSet disTriangleSet = new HashSet();
     disTriangleSet = getDisTriangles();
-    for(Iterator tIter=disTriangleSet.iterator(); tIter.hasNext();) {
+    for (Iterator tIter=disTriangleSet.iterator(); tIter.hasNext(); ) {
       DTriangle t = (DTriangle)tIter.next();
-      if( baseTriangle.hasCommonPoints(t) ) {
-
+      if ( baseTriangle.hasCommonPoints(t) ) {
       } else {
         Point p = t.returnGravity();
-        if(0 <= p.x && p.x <= width && 0 <= p.y && p.y <= height) {
+        if (0 <= p.x && p.x <= width && 0 <= p.y && p.y <= height) {
           int x = (int)(p.x*w / (width+100));
           int y = (int)(p.y*h / (height+100));
           t.draw(pix[abs(y)*w + abs(x)]);
@@ -159,7 +168,7 @@ class DelaunayTriangulation {
   }
   private HashSet getDisTriangles() {
     HashSet hoge = this.triangleSet;
-    for(Iterator tIter = hoge.iterator()  ; tIter.hasNext();) {
+    for (Iterator tIter = hoge.iterator(); tIter.hasNext(); ) {
       DTriangle t = (DTriangle)tIter.next();
       if (baseTriangle.hasCommonPoints(t)) {
         tIter.remove();

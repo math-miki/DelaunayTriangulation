@@ -13,10 +13,10 @@ public void settings() {
 void setup() {
   //size(1500,1200);
   points = new ArrayList();
-  img = loadImage("a.jpg");
+  img = loadImage("e.jpg");
   w = img.width;
   h = img.height;
-  for(int i=0; i<500; i++) {
+  for(int i=0; i<1000; i++) {
     points.add(new Point(random(width+100)/1,random(height+100)/1));
   }
 

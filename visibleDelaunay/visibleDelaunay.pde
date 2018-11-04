@@ -5,7 +5,7 @@ PImage img;
 color[] pix;
 int w;
 int h;
-int N = 400;
+int N = 100;
 DelaunayTriangulation delaunay;
 int count;
 public void settings() {
@@ -41,8 +41,7 @@ void draw() {
     translate(-50,-50);
     Point p = (Point)points.get(count);
     delaunay.addPoint(p);
-    delaunay.doTriangulation();
-    // delaunay.dis(pix,img.width, img.height);
+    //delaunay.disMid(pix,img.width, img.height);
     count+=1;
   }
 }
@@ -52,7 +51,6 @@ void mouseClicked() {
 }
 
 void keyPressed() {
-
   // Pのキーが入力された時に保存
   if(key == 'p' || key == 'P') {
     // デスクトップのパスを取得

@@ -8,7 +8,6 @@ class DTriangle {
   boolean equals(Object o) {
     try {
       DTriangle t = (DTriangle)o;
-      
       return true;
     } catch (Exception ex) {
       return false;
@@ -18,7 +17,7 @@ class DTriangle {
     stroke(0);
     strokeWeight(1);
     fill(c);
-    // fill(random(255));
+    //fill(random(255));
     // noFill();
     stroke(c);
     triangle(p1.x,p1.y,p2.x,p2.y,p3.x,p3.y);
